@@ -108,12 +108,16 @@ class _HomeShellState extends State<_HomeShell> with WidgetsBindingObserver {
               color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(width: 9),
-            const Text(
-              'healthmate',
-              style: TextStyle(
-                fontSize: 21,
-                fontWeight: FontWeight.w800,
-                letterSpacing: -.6,
+            const Flexible(
+              child: Text(
+                'healthmate',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 21,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -.6,
+                ),
               ),
             ),
           ],

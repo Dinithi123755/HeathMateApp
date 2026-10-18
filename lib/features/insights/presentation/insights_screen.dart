@@ -136,11 +136,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
                                           ? DateFormat.E()
                                                 .format(days[index])
                                                 .substring(0, 1)
-                                          : (index == 0 ||
-                                                    index == days.length - 1 ||
-                                                    index % 7 == 0
-                                                ? '${days[index].day}'
-                                                : ''),
+                                          : '',
                                       style: const TextStyle(fontSize: 10),
                                     ),
                                   ),
@@ -153,6 +149,20 @@ class _InsightsScreenState extends State<InsightsScreen> {
                     }),
                   ),
                 ),
+                if (_period == 30)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        DateFormat.MMMd().format(days.first),
+                        style: const TextStyle(fontSize: 10),
+                      ),
+                      Text(
+                        DateFormat.MMMd().format(days.last),
+                        style: const TextStyle(fontSize: 10),
+                      ),
+                    ],
+                  ),
                 const SizedBox(height: 12),
                 const Text(
                   'Tap a bar for its date and value.',

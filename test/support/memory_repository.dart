@@ -1,0 +1,45 @@
+import 'package:healthmate/features/records/data/health_repository.dart';
+import 'package:healthmate/features/records/domain/health_record.dart';
+import 'package:healthmate/features/settings/domain/app_settings.dart';
+
+class MemoryRepository implements HealthRepository {
+  List<HealthRecord> rows = [];
+  AppSettings preferences = const AppSettings();
+  bool fail = false;
+  int nextId = 1;
+  @override
+  Future<List<HealthRecord>> records() async {
+    if (fail) throw StateError('Simulated storage failure');
+    return [...rows]..sort((a, b) => b.date.compareTo(a.date));
+  }
+
+  @override
+  Future<void> save(HealthRecord record) async {
+    if (fail) throw StateError('Simulated storage failure');
+    if (record.id != null) rows.removeWhere((r) => r.id == record.id);
+    rows.add(
+      HealthRecord(
+        id: record.id ?? nextId++,
+        date: record.date,
+        steps: record.steps,
+        calories: record.calories,
+        water: record.water,
+        isDemo: record.isDemo,
+      ),
+    );
+  }
+
+  @override
+  Future<void> delete(int id) async => rows.removeWhere((r) => r.id == id);
+  @override
+  Future<AppSettings> settings() async => preferences;
+  @override
+  Future<void> saveSettings(AppSettings settings) async {
+    preferences = settings;
+  }
+
+  @override
+  Future<void> loadDemo(DateTime today) async {}
+  @override
+  Future<void> removeDemo() async => rows.removeWhere((r) => r.isDemo);
+}
