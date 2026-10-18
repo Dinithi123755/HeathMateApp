@@ -15,7 +15,6 @@ class HealthViewModel extends ChangeNotifier {
   String? error;
   DateTime? selectedDate;
   DateTime get today => calendarDay(now());
-  bool get hasDemo => _records.any((r) => r.isDemo);
   List<HealthRecord> get filtered =>
       selectedDate == null ? records : onDate(selectedDate!);
   List<HealthRecord> onDate(DateTime day) =>
@@ -71,7 +70,5 @@ class HealthViewModel extends ChangeNotifier {
   });
   Future<bool> delete(HealthRecord row) =>
       _change(() => repository.delete(row.id!));
-  Future<bool> loadDemo() => _change(() => repository.loadDemo(today));
-  Future<bool> removeDemo() => _change(repository.removeDemo);
   void refreshDate() => notifyListeners();
 }

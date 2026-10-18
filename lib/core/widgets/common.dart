@@ -74,26 +74,6 @@ class RecordCard extends StatelessWidget {
                   style: const TextStyle(fontWeight: FontWeight.w700),
                 ),
               ),
-              if (record.isDemo)
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFEAF3EF),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: const Text(
-                    'SAMPLE',
-                    style: TextStyle(
-                      fontSize: 9,
-                      letterSpacing: .5,
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
               PopupMenuButton<String>(
                 tooltip: 'Record actions',
                 onSelected: (value) => value == 'edit' ? onEdit() : onDelete(),

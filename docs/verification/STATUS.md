@@ -20,3 +20,11 @@ Applied a teal theme, restored the spa icon beside HealthMate, and refined cards
 ## Header theme switch — 18 October 2026
 Removed the sample-data menu. Added a sun/moon button for session-scoped light/dark mode, with theme-aware dashboard, forms and history. Existing database records are preserved. Full host test suite: 14 passed; preview render: passed; Flutter analyze: no issues. Dark dashboard preview visually checked. Android device workflow not rerun.
 
+
+## Remove generated records — 18 October 2026
+Database v3 deletes only is_demo=1 rows during upgrade. Migration tests from v1 and v2 pass, preserving personal data. Updated release APK built and installed with adb install -r on emulator-5554, then launched. No uninstall or data reset performed.
+
+
+## Unused sample code cleanup — 18 October 2026
+Removed sample repository/view-model methods, model flag, badge, dashboard message and obsolete sample-loading test. Database v4 removes the legacy column using a migration preserving personal records. Full test suite: 15 passed. Analyzer: no issues. Legacy sample references remain only where required for upgrading existing databases and testing that upgrade.
+

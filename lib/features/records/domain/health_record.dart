@@ -11,14 +11,12 @@ class HealthRecord {
     required this.steps,
     required this.calories,
     required this.water,
-    this.isDemo = false,
   });
   final int? id;
   final DateTime date;
   final int steps;
   final int calories;
   final int water;
-  final bool isDemo;
 
   Map<String, Object?> toMap() => {
     if (id != null) 'id': id,
@@ -26,7 +24,6 @@ class HealthRecord {
     'steps': steps,
     'calories': calories,
     'water': water,
-    'is_demo': isDemo ? 1 : 0,
   };
   factory HealthRecord.fromMap(Map<String, Object?> map) => HealthRecord(
     id: map['id'] as int,
@@ -34,7 +31,6 @@ class HealthRecord {
     steps: map['steps'] as int,
     calories: map['calories'] as int,
     water: map['water'] as int,
-    isDemo: map['is_demo'] == 1,
   );
 }
 

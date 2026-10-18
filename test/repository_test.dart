@@ -60,22 +60,6 @@ void main() {
       expect(await repository.records(), isEmpty);
     },
   );
-  test(
-    'TC03 demo refresh is idempotent and removal preserves personal rows',
-    () async {
-      await repository.save(
-        HealthRecord(date: today, steps: 10, calories: 0, water: 100),
-      );
-      await repository.loadDemo(today);
-      await repository.loadDemo(today);
-      expect(await repository.records(), hasLength(4));
-      await repository.removeDemo();
-      final rows = await repository.records();
-      expect(rows, hasLength(1));
-      expect(rows.single.isDemo, false);
-      expect(rows.single.water, 100);
-    },
-  );
   test('TC04 records survive database close and reopen', () async {
     final temp = await Directory.systemTemp.createTemp('healthmate_test_');
     final path = '${temp.path}/persistence.db';

@@ -22,15 +22,10 @@ class MemoryRepository implements HealthRepository {
         steps: record.steps,
         calories: record.calories,
         water: record.water,
-        isDemo: record.isDemo,
       ),
     );
   }
 
   @override
   Future<void> delete(int id) async => rows.removeWhere((r) => r.id == id);
-  @override
-  Future<void> loadDemo(DateTime today) async {}
-  @override
-  Future<void> removeDemo() async => rows.removeWhere((r) => r.isDemo);
 }

@@ -91,17 +91,6 @@ class DashboardScreen extends StatelessWidget {
             fontSize: 12,
           ),
         ),
-        if (vm.hasDemo)
-          Padding(
-            padding: EdgeInsets.only(top: 12),
-            child: Text(
-              'Sample records are included in the totals.',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-                fontSize: 12,
-              ),
-            ),
-          ),
       ],
     );
   }

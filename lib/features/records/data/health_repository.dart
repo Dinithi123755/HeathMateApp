@@ -5,8 +5,6 @@ abstract class HealthRepository {
   Future<List<HealthRecord>> records();
   Future<void> save(HealthRecord record);
   Future<void> delete(int id);
-  Future<void> loadDemo(DateTime today);
-  Future<void> removeDemo();
 }
 
 class SqliteHealthRepository implements HealthRepository {
@@ -45,32 +43,5 @@ class SqliteHealthRepository implements HealthRepository {
   Future<void> delete(int id) async {
     final db = await database.database;
     await db.delete('health_records', where: 'id = ?', whereArgs: [id]);
-  }
-
-  @override
-  Future<void> loadDemo(DateTime today) async {
-    final db = await database.database;
-    await db.transaction((txn) async {
-      // Replace only marked sample rows; personal records are never overwritten.
-      await txn.delete('health_records', where: 'is_demo = 1');
-      for (var day = 0; day < 3; day++) {
-        await txn.insert(
-          'health_records',
-          HealthRecord(
-            date: DateTime(today.year, today.month, today.day - day),
-            steps: 3800 + ((day * 1297 + 4050) % 7200),
-            calories: 190 + ((day * 53 + 230) % 410),
-            water: 1000 + ((day * 3 + 4) % 7) * 250,
-            isDemo: true,
-          ).toMap(),
-        );
-      }
-    });
-  }
-
-  @override
-  Future<void> removeDemo() async {
-    final db = await database.database;
-    await db.delete('health_records', where: 'is_demo = 1');
   }
 }

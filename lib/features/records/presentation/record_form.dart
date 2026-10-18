@@ -49,7 +49,6 @@ class _RecordFormState extends State<RecordForm> {
       steps: int.parse(_steps.text.trim()),
       calories: int.parse(_calories.text.trim()),
       water: int.parse(_water.text.trim()),
-      isDemo: widget.record?.isDemo ?? false,
     );
     final success = await vm.save(row);
     if (!mounted) return;
