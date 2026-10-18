@@ -104,7 +104,37 @@ class _HomeScreenState extends State<_HomeScreen> with WidgetsBindingObserver {
     final vm = context.watch<HealthViewModel>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('HealthMate'),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 38,
+              height: 38,
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(
+                Icons.spa_rounded,
+                color: Colors.white,
+                size: 26,
+              ),
+            ),
+            const SizedBox(width: 11),
+            const Flexible(
+              child: Text(
+                'HealthMate',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -.5,
+                ),
+              ),
+            ),
+          ],
+        ),
         actions: [
           PopupMenuButton<String>(
             tooltip: 'Sample data for testing',
