@@ -83,3 +83,11 @@ The packaged APK for this project is in `dist/HealthMate-1.0.0.apk`. If OneDrive
 - Provider: https://pub.dev/packages/provider
 - intl: https://pub.dev/packages/intl
 
+
+## Windows Desktop debug build cache
+
+Generated build files are redirected through a directory junction from `build/` to a local folder under `%LOCALAPPDATA%\HealthMate`, outside OneDrive. VS Code's HealthMate launch configurations run `scripts/prepare_build_cache.ps1` automatically before launching. The script preserves any existing physical build folder as an ignored `build-cache-backup-*` folder. It never changes application source.
+
+After `flutter clean`, use F5 to recreate the junction, or run `powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts/prepare_build_cache.ps1` before building from a terminal. This local setup is Windows-specific; other operating systems can omit the preLaunchTask.
+
+Verification on 18 October 2026: a fresh debug build and a subsequent `flutter run --debug --no-resident -d emulator-5554` both built successfully; the app installed and launched on the authorized Android emulator. This confirms build/startup, not the full integration test suite.

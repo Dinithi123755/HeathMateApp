@@ -49,3 +49,4 @@ app.*.map.json
 
 /dist/
 /docs/verification/build-location.txt
+/build-cache-backup-*/
