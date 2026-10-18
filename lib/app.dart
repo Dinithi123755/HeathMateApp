@@ -9,23 +9,36 @@ import 'features/records/presentation/health_view_model.dart';
 import 'features/records/presentation/history_screen.dart';
 import 'features/records/presentation/record_form.dart';
 
-class HealthMateApp extends StatelessWidget {
+class HealthMateApp extends StatefulWidget {
   const HealthMateApp({required this.viewModel, super.key});
   final HealthViewModel viewModel;
   @override
+  State<HealthMateApp> createState() => _HealthMateAppState();
+}
+
+class _HealthMateAppState extends State<HealthMateApp> {
+  bool _dark = false;
+  @override
   Widget build(BuildContext context) => ChangeNotifierProvider.value(
-    value: viewModel,
+    value: widget.viewModel,
     child: MaterialApp(
       title: 'HealthMate',
       debugShowCheckedModeBanner: false,
       theme: appTheme(),
-      home: const _HomeScreen(),
+      darkTheme: appTheme(brightness: Brightness.dark),
+      themeMode: _dark ? ThemeMode.dark : ThemeMode.light,
+      home: _HomeScreen(
+        dark: _dark,
+        onToggleTheme: () => setState(() => _dark = !_dark),
+      ),
     ),
   );
 }
 
 class _HomeScreen extends StatefulWidget {
-  const _HomeScreen();
+  const _HomeScreen({required this.dark, required this.onToggleTheme});
+  final bool dark;
+  final VoidCallback onToggleTheme;
   @override
   State<_HomeScreen> createState() => _HomeScreenState();
 }
@@ -77,28 +90,6 @@ class _HomeScreenState extends State<_HomeScreen> with WidgetsBindingObserver {
     }
   }
 
-  Future<void> _samples(String action) async {
-    final vm = context.read<HealthViewModel>();
-    if (!await confirm(
-      context,
-      title: action == 'load'
-          ? 'Load sample records?'
-          : 'Remove sample records?',
-      message: action == 'load'
-          ? 'Add sample data for testing. Sample entries are labelled and included in totals.'
-          : 'Only labelled sample records will be removed. Personal records will be kept.',
-      action: action == 'load' ? 'Load samples' : 'Remove samples',
-    )) {
-      return;
-    }
-    final success = action == 'load'
-        ? await vm.loadDemo()
-        : await vm.removeDemo();
-    if (mounted) {
-      feedbackMessage(context, success ? 'Sample records updated.' : vm.error!);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<HealthViewModel>();
@@ -136,21 +127,17 @@ class _HomeScreenState extends State<_HomeScreen> with WidgetsBindingObserver {
           ],
         ),
         actions: [
-          PopupMenuButton<String>(
-            tooltip: 'Sample data for testing',
-            enabled: vm.ready && !vm.busy,
-            onSelected: _samples,
-            itemBuilder: (_) => [
-              const PopupMenuItem(
-                value: 'load',
-                child: Text('Load sample records'),
-              ),
-              if (vm.hasDemo)
-                const PopupMenuItem(
-                  value: 'remove',
-                  child: Text('Remove sample records'),
-                ),
-            ],
+          IconButton(
+            key: const Key('theme-toggle'),
+            tooltip: widget.dark
+                ? 'Switch to light mode'
+                : 'Switch to dark mode',
+            onPressed: widget.onToggleTheme,
+            icon: Icon(
+              widget.dark
+                  ? Icons.light_mode_outlined
+                  : Icons.dark_mode_outlined,
+            ),
           ),
         ],
       ),

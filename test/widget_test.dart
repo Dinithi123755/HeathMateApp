@@ -68,6 +68,40 @@ void main() {
     },
   );
 
+  testWidgets('Theme toggle replaces samples menu and applies across screens', (
+    tester,
+  ) async {
+    final vm = HealthViewModel(MemoryRepository());
+    await vm.initialize();
+    await tester.pumpWidget(HealthMateApp(viewModel: vm));
+    expect(find.byTooltip('Sample data for testing'), findsNothing);
+    await tester.tap(find.byTooltip('Switch to dark mode'));
+    await tester.pumpAndSettle();
+    expect(
+      Theme.of(tester.element(find.byType(Scaffold).first)).brightness,
+      Brightness.dark,
+    );
+    await tester.tap(find.text('History').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+    expect(
+      Theme.of(tester.element(find.byType(TextFormField).first)).brightness,
+      Brightness.dark,
+    );
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Switch to light mode'));
+    await tester.pumpAndSettle();
+    expect(
+      Theme.of(tester.element(find.byType(Scaffold).first)).brightness,
+      Brightness.light,
+    );
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox());
+    vm.dispose();
+  });
+
   testWidgets('TC12 navigation fits a narrow phone with large text', (
     tester,
   ) async {

@@ -10,12 +10,6 @@ void main() {
     await tester.pumpAndSettle();
     await binding.convertFlutterSurfaceToImage();
     await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Sample data for testing'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Load sample records'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(FilledButton, 'Load samples'));
-    await tester.pumpAndSettle();
     await binding.takeScreenshot('01_dashboard');
     await tester.tap(find.text('History').last);
     await tester.pumpAndSettle();

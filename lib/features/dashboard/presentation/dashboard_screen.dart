@@ -22,22 +22,26 @@ class DashboardScreen extends StatelessWidget {
         const SizedBox(height: 10),
         Row(
           children: [
-            const Icon(
+            Icon(
               Icons.calendar_today_outlined,
               size: 15,
-              color: AppColors.muted,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
                 DateFormat('EEEE, d MMMM yyyy').format(vm.today),
-                style: const TextStyle(color: AppColors.muted, fontSize: 13),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  fontSize: 13,
+                ),
               ),
             ),
           ],
         ),
         const SizedBox(height: 26),
         _summary(
+          context,
           'Steps walked',
           totals.steps,
           'steps',
@@ -46,6 +50,7 @@ class DashboardScreen extends StatelessWidget {
         ),
         const SizedBox(height: 14),
         _summary(
+          context,
           'Calories burned',
           totals.calories,
           'kcal',
@@ -54,6 +59,7 @@ class DashboardScreen extends StatelessWidget {
         ),
         const SizedBox(height: 14),
         _summary(
+          context,
           'Water intake',
           totals.water,
           'ml',
@@ -63,31 +69,37 @@ class DashboardScreen extends StatelessWidget {
         const SizedBox(height: 24),
         Row(
           children: [
-            const Icon(
+            Icon(
               Icons.assignment_outlined,
               size: 18,
-              color: AppColors.primary,
+              color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
                 '$count ${count == 1 ? 'record' : 'records'} today',
-                style: const TextStyle(fontWeight: FontWeight.w600),
+                style: TextStyle(fontWeight: FontWeight.w600),
               ),
             ),
           ],
         ),
         const SizedBox(height: 8),
-        const Text(
+        Text(
           'Entries on the same date are added together.',
-          style: TextStyle(color: AppColors.muted, fontSize: 12),
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+            fontSize: 12,
+          ),
         ),
         if (vm.hasDemo)
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(top: 12),
             child: Text(
               'Sample records are included in the totals.',
-              style: TextStyle(color: AppColors.muted, fontSize: 12),
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                fontSize: 12,
+              ),
             ),
           ),
       ],
@@ -95,6 +107,7 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget _summary(
+    BuildContext context,
     String label,
     int value,
     String unit,
@@ -109,10 +122,14 @@ class DashboardScreen extends StatelessWidget {
             width: 52,
             height: 52,
             decoration: BoxDecoration(
-              color: color.withValues(alpha: .10),
+              color: AppColors.metric(context, color).withValues(alpha: .10),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Icon(icon, color: color, size: 28),
+            child: Icon(
+              icon,
+              color: AppColors.metric(context, color),
+              size: 28,
+            ),
           ),
           const SizedBox(width: 18),
           Expanded(
@@ -121,25 +138,28 @@ class DashboardScreen extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: const TextStyle(color: AppColors.muted, fontSize: 13),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    fontSize: 13,
+                  ),
                 ),
                 const SizedBox(height: 6),
                 Text.rich(
                   TextSpan(
                     text: number(value),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.ink,
+                      color: Theme.of(context).colorScheme.onSurface,
                       letterSpacing: -.5,
                     ),
                     children: [
                       TextSpan(
                         text: ' $unit',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.muted,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                           letterSpacing: 0,
                         ),
                       ),

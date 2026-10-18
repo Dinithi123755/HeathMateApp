@@ -2,7 +2,7 @@
 
 ## Scope
 
-The app implements the coursework's core functions: add, view, edit and delete daily health entries, filter history by date and display today's totals. Inputs are steps, calories burned in kcal and water in ml. The menu includes three labelled sample records for initial testing. Optional goals, statistics, charts, streaks and appearance settings have been removed.
+The app implements the coursework's core functions: add, view, edit and delete daily health entries, filter history by date and display today's totals. Inputs are steps, calories burned in kcal and water in ml. Test records are entered through the normal Add record form. The header sun/moon button switches light and dark themes for the current session. Goals, statistics, charts and streaks are omitted.
 
 ## Architecture
 
@@ -34,7 +34,7 @@ The date column is indexed. Several rows may share a date and are summed for the
 
 Create uses db.insert. Read uses db.query with descending date/id order. Update and delete use `where: 'id = ?'` and `whereArgs: [id]`. Each successful mutation refreshes the ViewModel and notifies listening widgets. The form validates text before constructing a HealthRecord, and the repository validates numeric values again. Error messages and a busy flag handle failures and repeated taps.
 
-Sample loading runs in a transaction, replacing only flagged sample rows. Removing samples preserves personal rows. This is a testing aid required by the brief, not an additional wellness feature.
+Legacy sample helpers and flags remain internally for compatibility and repository tests; there is no sample loading or removal menu in the app. Existing records are preserved. The brief asks for dummy records for initial testing, not a dedicated sample-data menu.
 
 ## UI
 
@@ -57,3 +57,4 @@ Flutter (n.d.) Persist data with SQLite. https://docs.flutter.dev/cookbook/persi
 sqflite contributors (n.d.) sqflite. https://pub.dev/packages/sqflite (Accessed 18 October 2026).
 
 Provider contributors (n.d.) provider. https://pub.dev/packages/provider (Accessed 18 October 2026).
+

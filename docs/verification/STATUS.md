@@ -16,3 +16,7 @@ The earlier expanded implementation and successful debug startup remain in Git h
 ## Visual refresh — 18 October 2026
 Applied a teal theme, restored the spa icon beside HealthMate, and refined cards, typography, inputs and navigation. Flutter analyze: no issues. Existing widget interaction and narrow-screen tests plus preview render: 3 passed. All three host-rendered previews visually inspected. Release APK rebuilt and signature verified; dist/SHA256.txt updated. This refresh was not retested on an Android device.
 
+
+## Header theme switch — 18 October 2026
+Removed the sample-data menu. Added a sun/moon button for session-scoped light/dark mode, with theme-aware dashboard, forms and history. Existing database records are preserved. Full host test suite: 14 passed; preview render: passed; Flutter analyze: no issues. Dark dashboard preview visually checked. Android device workflow not rerun.
+

@@ -8,7 +8,7 @@ Flutter coursework app for manually recording steps walked, calories burned and 
 - History: saved records, date filter, edit and delete actions.
 - Add/Edit record: date and three numeric inputs with validation.
 
-The overflow menu loads or removes three labelled sample records for testing, as requested by the brief. Multiple records on one date are added together. There are no goals, charts, streaks, dark mode or settings screen.
+The header sun/moon button switches between light and dark mode for the current session. Enter test records through Add record. Multiple records on one date are added together.
 
 ## Run in VS Code
 

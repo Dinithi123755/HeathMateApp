@@ -147,7 +147,7 @@ class _Metric extends StatelessWidget {
   Widget build(BuildContext context) => Row(
     mainAxisSize: MainAxisSize.min,
     children: [
-      Icon(icon, color: color, size: 18),
+      Icon(icon, color: AppColors.metric(context, color), size: 18),
       const SizedBox(width: 4),
       Text(
         text,

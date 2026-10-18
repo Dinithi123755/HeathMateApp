@@ -42,7 +42,7 @@ void main() {
           steps: 3800 + ((day * 1297 + 4050) % 7200),
           calories: 190 + ((day * 53 + 230) % 410),
           water: 1000 + ((day * 3 + 4) % 7) * 250,
-          isDemo: true,
+          isDemo: false,
         ),
       );
     }
@@ -75,6 +75,9 @@ void main() {
     }
 
     await capture('01_today');
+    await tester.tap(find.byTooltip('Switch to dark mode'));
+    await capture('06_dark_dashboard');
+    await tester.tap(find.byTooltip('Switch to light mode'));
     for (final item in [('History', '02_history')]) {
       await tester.tap(find.text(item.$1).last);
       await capture(item.$2);
