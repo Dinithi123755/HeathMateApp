@@ -1,49 +1,11 @@
-# HealthMate screen wireframes
+# Screen structure
 
-These describe the screen structure, separate from rendered UI evidence.
+Dashboard: HealthMate title and sample-data menu; today's date; steps total; calories total; water total; Add record button; Dashboard/History navigation.
 
-```text
-TODAY                          HISTORY
-+--------------------------+   +--------------------------+
-| HealthMate       Local   |   | HealthMate       Local   |
-| Date                     |   | Your health journal      |
-| A little better...       |   | All / Today / By date    |
-| Streak + encouragement   |   | Date range / Clear       |
-| Today at a glance        |   | Count / newest first     |
-| Steps value + progress   |   | Date + values + menu     |
-| Calories + progress      |   | Date + values + menu     |
-| Water + progress         |   | ...scroll...             |
-| Today's entries          |   |                          |
-|             Log activity |   |             Log activity |
-| Today History Insights ⚙ |   | Today History Insights ⚙ |
-+--------------------------+   +--------------------------+
+History: Health records title; Filter by date and Show all; dated record cards containing steps/calories/water and Edit/Delete menu; Add record button; Dashboard/History navigation.
 
-LOG / EDIT                     INSIGHTS
-+--------------------------+   +--------------------------+
-| Back      Log activity   |   | HealthMate       Local   |
-| Entry guidance           |   | See your rhythm          |
-| Date picker              |   | 7 days / 30 days         |
-| Steps input              |   | Steps / Calories / Water |
-| Calories input           |   | Period total + dates     |
-| Water input              |   | Daily bar chart          |
-| +250 / +500 / +750 ml     |   | Average / Active days    |
-| Inline validation        |   | Highest day              |
-| Save record              |   | Calculation explanation  |
-| Input guidance           |   | Today History Insights ⚙ |
-+--------------------------+   +--------------------------+
+Add/Edit: Back button; date picker; steps input; calories input; water input; validation messages; Save record button.
 
-SETTINGS
-+--------------------------+
-| HealthMate       Local   |
-| Make it yours            |
-| Daily goals -> dialog    |
-| Dark appearance switch   |
-| Load / refresh demo      |
-| Remove demo              |
-| About + local data notes |
-| Open-source licences     |
-| Today History Insights ⚙ |
-+--------------------------+
-```
+Dialogs: delete confirmation, unsaved changes confirmation and sample-data confirmation.
 
-Navigation: bottom destinations preserve their screen state; Log activity and Edit use the same form route. Record menus provide Edit/Delete. Deletion and unsaved back navigation display confirmation dialogs. Goals use a validated dialog.
+Updated Flutter-rendered screen previews are in docs/previews. They use sample data and are labelled as host renders rather than device screenshots.

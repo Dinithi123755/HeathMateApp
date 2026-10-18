@@ -4,7 +4,6 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:healthmate/core/data/health_database.dart';
 import 'package:healthmate/features/records/data/health_repository.dart';
 import 'package:healthmate/features/records/domain/health_record.dart';
-import 'package:healthmate/features/settings/domain/app_settings.dart';
 
 void main() {
   sqfliteFfiInit();
@@ -69,7 +68,7 @@ void main() {
       );
       await repository.loadDemo(today);
       await repository.loadDemo(today);
-      expect(await repository.records(), hasLength(15));
+      expect(await repository.records(), hasLength(4));
       await repository.removeDemo();
       final rows = await repository.records();
       expect(rows, hasLength(1));
@@ -77,7 +76,7 @@ void main() {
       expect(rows.single.water, 100);
     },
   );
-  test('TC04 records and goals survive database close and reopen', () async {
+  test('TC04 records survive database close and reopen', () async {
     final temp = await Directory.systemTemp.createTemp('healthmate_test_');
     final path = '${temp.path}/persistence.db';
     final disk = HealthDatabase(factory: databaseFactoryFfi, path: path);
@@ -86,16 +85,11 @@ void main() {
       await first.save(
         HealthRecord(date: today, steps: 12, calories: 0, water: 300),
       );
-      await first.saveSettings(
-        const AppSettings(waterGoal: 2500, darkMode: true),
-      );
       await disk.close();
       final reopened = HealthDatabase(factory: databaseFactoryFfi, path: path);
       try {
         final second = SqliteHealthRepository(reopened, now: () => today);
         expect((await second.records()).single.water, 300);
-        expect((await second.settings()).waterGoal, 2500);
-        expect((await second.settings()).darkMode, true);
       } finally {
         await reopened.close();
       }
@@ -115,10 +109,6 @@ void main() {
           'calories': 0,
           'water': 1,
         }),
-        throwsA(isA<DatabaseException>()),
-      );
-      await expectLater(
-        repository.saveSettings(const AppSettings(waterGoal: 0)),
         throwsA(isA<DatabaseException>()),
       );
     },

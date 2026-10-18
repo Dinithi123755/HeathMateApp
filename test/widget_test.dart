@@ -80,13 +80,9 @@ void main() {
     final vm = HealthViewModel(MemoryRepository());
     await vm.initialize();
     await tester.pumpWidget(HealthMateApp(viewModel: vm));
-    for (final tab in ['History', 'Insights', 'Settings', 'Today']) {
+    for (final tab in ['History', 'Dashboard']) {
       await tester.tap(find.text(tab).last);
       await tester.pumpAndSettle();
-      if (tab == 'Insights') {
-        await tester.tap(find.text('30 days'));
-        await tester.pumpAndSettle();
-      }
       expect(tester.takeException(), isNull);
     }
     await tester.pumpWidget(const SizedBox());

@@ -33,12 +33,9 @@ void main() {
       expect(vm.todayTotals.steps, 300);
       expect(vm.todayTotals.calories, 30);
       expect(vm.todayTotals.water, 750);
-      expect(vm.streak, 2);
-      expect(vm.periodTotals(7).water, 850);
-      expect(vm.activeDays(7), 2);
     },
   );
-  test('TC07 date range filtering is inclusive and can be cleared', () async {
+  test('TC07 exact date filtering can be cleared', () async {
     for (var day = 16; day <= 18; day++) {
       await vm.save(
         HealthRecord(
@@ -49,11 +46,9 @@ void main() {
         ),
       );
     }
-    vm.filter(DateTime(2026, 10, 16), DateTime(2026, 10, 17));
-    expect(vm.filtered, hasLength(2));
-    vm.filter(today, today);
+    vm.filter(today);
     expect(vm.filtered, hasLength(1));
-    vm.filter(null, null);
+    vm.filter(null);
     expect(vm.filtered, hasLength(3));
   });
   test(
@@ -101,9 +96,6 @@ void main() {
       );
       current = DateTime(2027, 1, 1);
       expect(clockVm.todayTotals.steps, 0);
-      expect(clockVm.days(7).last, DateTime(2027, 1, 1));
-      expect(clockVm.periodTotals(7).steps, 20);
-      expect(clockVm.streak, 1);
       clockVm.dispose();
     },
   );

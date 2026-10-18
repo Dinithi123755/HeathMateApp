@@ -4,12 +4,10 @@ import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
 import 'core/widgets/common.dart';
 import 'features/dashboard/presentation/dashboard_screen.dart';
-import 'features/insights/presentation/insights_screen.dart';
 import 'features/records/domain/health_record.dart';
 import 'features/records/presentation/health_view_model.dart';
 import 'features/records/presentation/history_screen.dart';
 import 'features/records/presentation/record_form.dart';
-import 'features/settings/presentation/settings_screen.dart';
 
 class HealthMateApp extends StatelessWidget {
   const HealthMateApp({required this.viewModel, super.key});
@@ -17,26 +15,22 @@ class HealthMateApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider.value(
     value: viewModel,
-    child: Consumer<HealthViewModel>(
-      builder: (context, vm, child) => MaterialApp(
-        title: 'HealthMate',
-        debugShowCheckedModeBanner: false,
-        theme: appTheme(Brightness.light),
-        darkTheme: appTheme(Brightness.dark),
-        themeMode: vm.settings.darkMode ? ThemeMode.dark : ThemeMode.light,
-        home: const _HomeShell(),
-      ),
+    child: MaterialApp(
+      title: 'HealthMate',
+      debugShowCheckedModeBanner: false,
+      theme: appTheme(),
+      home: const _HomeScreen(),
     ),
   );
 }
 
-class _HomeShell extends StatefulWidget {
-  const _HomeShell();
+class _HomeScreen extends StatefulWidget {
+  const _HomeScreen();
   @override
-  State<_HomeShell> createState() => _HomeShellState();
+  State<_HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeShellState extends State<_HomeShell> with WidgetsBindingObserver {
+class _HomeScreenState extends State<_HomeScreen> with WidgetsBindingObserver {
   int _tab = 0;
   Timer? _timer;
   @override
@@ -62,77 +56,71 @@ class _HomeShellState extends State<_HomeShell> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  void _edit([HealthRecord? row]) => Navigator.push(
+  void _edit([HealthRecord? record]) => Navigator.push(
     context,
-    MaterialPageRoute<void>(builder: (_) => RecordForm(record: row)),
+    MaterialPageRoute<void>(builder: (_) => RecordForm(record: record)),
   );
-  Future<void> _delete(HealthRecord row) async {
+  Future<void> _delete(HealthRecord record) async {
     final vm = context.read<HealthViewModel>();
     if (vm.busy) return;
     if (!await confirm(
       context,
-      title: 'Delete this record?',
-      message:
-          'This entry will be permanently removed and your summaries will update.',
+      title: 'Delete record?',
+      message: 'This record will be permanently deleted.',
       action: 'Delete',
     )) {
       return;
     }
-    final success = await vm.delete(row);
+    final success = await vm.delete(record);
     if (mounted) {
       feedbackMessage(context, success ? 'Record deleted.' : vm.error!);
+    }
+  }
+
+  Future<void> _samples(String action) async {
+    final vm = context.read<HealthViewModel>();
+    if (!await confirm(
+      context,
+      title: action == 'load'
+          ? 'Load sample records?'
+          : 'Remove sample records?',
+      message: action == 'load'
+          ? 'Add sample data for testing. Sample entries are labelled and included in totals.'
+          : 'Only labelled sample records will be removed. Personal records will be kept.',
+      action: action == 'load' ? 'Load samples' : 'Remove samples',
+    )) {
+      return;
+    }
+    final success = action == 'load'
+        ? await vm.loadDemo()
+        : await vm.removeDemo();
+    if (mounted) {
+      feedbackMessage(context, success ? 'Sample records updated.' : vm.error!);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<HealthViewModel>();
-    final pages = [
-      DashboardScreen(
-        onAdd: _edit,
-        onHistory: () => setState(() => _tab = 1),
-        onEdit: _edit,
-        onDelete: _delete,
-      ),
-      HistoryScreen(onAdd: _edit, onEdit: _edit, onDelete: _delete),
-      const InsightsScreen(),
-      const SettingsScreen(),
-    ];
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.spa_rounded,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            const SizedBox(width: 9),
-            const Flexible(
-              child: Text(
-                'healthmate',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 21,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -.6,
-                ),
-              ),
-            ),
-          ],
-        ),
+        title: const Text('HealthMate'),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 20),
-            child: Tooltip(
-              message: 'Saved locally on your device',
-              child: Icon(
-                Icons.verified_user_outlined,
-                size: 21,
-                color: Theme.of(context).colorScheme.primary,
+          PopupMenuButton<String>(
+            tooltip: 'Sample data for testing',
+            enabled: vm.ready && !vm.busy,
+            onSelected: _samples,
+            itemBuilder: (_) => [
+              const PopupMenuItem(
+                value: 'load',
+                child: Text('Load sample records'),
               ),
-            ),
+              if (vm.hasDemo)
+                const PopupMenuItem(
+                  value: 'remove',
+                  child: Text('Remove sample records'),
+                ),
+            ],
           ),
         ],
       ),
@@ -141,10 +129,10 @@ class _HomeShellState extends State<_HomeShell> with WidgetsBindingObserver {
             ? const Center(child: CircularProgressIndicator())
             : !vm.ready
             ? Padding(
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.all(20),
                 child: EmptyState(
-                  title: 'Let’s try again',
-                  message: vm.error!,
+                  title: 'Unable to load records',
+                  message: vm.error ?? 'Please try again.',
                   action: FilledButton(
                     onPressed: vm.initialize,
                     child: const Text('Retry'),
@@ -153,16 +141,26 @@ class _HomeShellState extends State<_HomeShell> with WidgetsBindingObserver {
               )
             : Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 760),
-                  child: IndexedStack(index: _tab, children: pages),
+                  constraints: const BoxConstraints(maxWidth: 700),
+                  child: IndexedStack(
+                    index: _tab,
+                    children: [
+                      const DashboardScreen(),
+                      HistoryScreen(
+                        onAdd: _edit,
+                        onEdit: _edit,
+                        onDelete: _delete,
+                      ),
+                    ],
+                  ),
                 ),
               ),
       ),
-      floatingActionButton: _tab < 2 && !vm.loading
+      floatingActionButton: vm.ready
           ? FloatingActionButton.extended(
               onPressed: vm.busy ? null : _edit,
               icon: const Icon(Icons.add),
-              label: const Text('Log activity'),
+              label: const Text('Add record'),
             )
           : null,
       bottomNavigationBar: NavigationBar(
@@ -170,25 +168,10 @@ class _HomeShellState extends State<_HomeShell> with WidgetsBindingObserver {
         onDestinationSelected: (index) => setState(() => _tab = index),
         destinations: const [
           NavigationDestination(
-            icon: Icon(Icons.grid_view_outlined),
-            selectedIcon: Icon(Icons.grid_view_rounded),
-            label: 'Today',
+            icon: Icon(Icons.dashboard_outlined),
+            label: 'Dashboard',
           ),
-          NavigationDestination(
-            icon: Icon(Icons.history_outlined),
-            selectedIcon: Icon(Icons.history_rounded),
-            label: 'History',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.bar_chart_outlined),
-            selectedIcon: Icon(Icons.bar_chart_rounded),
-            label: 'Insights',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.tune_outlined),
-            selectedIcon: Icon(Icons.tune_rounded),
-            label: 'Settings',
-          ),
+          NavigationDestination(icon: Icon(Icons.history), label: 'History'),
         ],
       ),
     );

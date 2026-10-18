@@ -60,9 +60,7 @@ class _RecordFormState extends State<RecordForm> {
         Navigator.pop(context);
         feedbackMessage(
           context,
-          widget.record == null
-              ? 'Activity saved. Keep it going!'
-              : 'Record updated.',
+          widget.record == null ? 'Record saved.' : 'Record updated.',
         );
       });
     } else {
@@ -92,7 +90,7 @@ class _RecordFormState extends State<RecordForm> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(widget.record == null ? 'Log activity' : 'Edit record'),
+          title: Text(widget.record == null ? 'Add record' : 'Edit record'),
         ),
         body: Center(
           child: ConstrainedBox(
@@ -105,15 +103,8 @@ class _RecordFormState extends State<RecordForm> {
               child: ListView(
                 padding: const EdgeInsets.all(24),
                 children: [
-                  Text(
-                    'Small steps. Real progress.',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
                   const Text(
-                    'Log an activity or a daily total. Entries on the same date are added together.',
+                    'Enter the date, steps walked, calories burned and water intake.',
                   ),
                   const SizedBox(height: 24),
                   Card(
@@ -174,24 +165,6 @@ class _RecordFormState extends State<RecordForm> {
                     busy,
                   ),
                   const SizedBox(height: 12),
-                  Wrap(
-                    spacing: 8,
-                    children: [250, 500, 750]
-                        .map(
-                          (amount) => ActionChip(
-                            label: Text('+$amount ml'),
-                            onPressed: busy
-                                ? null
-                                : () {
-                                    final value =
-                                        int.tryParse(_water.text) ?? 0;
-                                    _water.text = '${value + amount}';
-                                    setState(() => _dirty = true);
-                                  },
-                          ),
-                        )
-                        .toList(),
-                  ),
                   if (_error != null)
                     Padding(
                       padding: const EdgeInsets.only(top: 16),

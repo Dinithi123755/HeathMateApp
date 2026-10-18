@@ -11,7 +11,7 @@ The app is one part of the coursework. Marks are awarded by the assessor, not gu
 - Demonstrate validation, empty results and deletion cancellation.
 - Show the SQLite schema and parameterized CRUD methods.
 - Explain Provider, ChangeNotifier, the ViewModel and repository boundary.
-- Demonstrate the optional goals, insights, appearance and sample-data features.
+- Show the labelled sample records used for testing.
 
 ## PDF technical report
 
@@ -43,10 +43,10 @@ Record your own voice explaining the app. Keep the final video at or below **25 
 
 1. Introduce HealthMate and describe the offline manual journal.
 2. Add a record, demonstrate validation and explain the fields/units.
-3. Show dashboard totals and goals.
+3. Show dashboard totals.
 4. Open History, search a date and edit a record.
 5. Cancel a delete, then confirm deletion of a test record.
-6. Demonstrate the insights periods and explain the averaging rule.
+6. Explain how entries on the same date are summed.
 7. Explain architecture and show SQLite CRUD and test results briefly.
 8. Restart the app and show saved data.
 

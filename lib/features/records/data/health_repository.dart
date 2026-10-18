@@ -1,13 +1,10 @@
 import '../../../core/data/health_database.dart';
-import '../../settings/domain/app_settings.dart';
 import '../domain/health_record.dart';
 
 abstract class HealthRepository {
   Future<List<HealthRecord>> records();
   Future<void> save(HealthRecord record);
   Future<void> delete(int id);
-  Future<AppSettings> settings();
-  Future<void> saveSettings(AppSettings settings);
   Future<void> loadDemo(DateTime today);
   Future<void> removeDemo();
 }
@@ -51,26 +48,12 @@ class SqliteHealthRepository implements HealthRepository {
   }
 
   @override
-  Future<AppSettings> settings() async {
-    final db = await database.database;
-    return AppSettings.fromMap(
-      (await db.query('app_settings', where: 'id = 1')).single,
-    );
-  }
-
-  @override
-  Future<void> saveSettings(AppSettings settings) async {
-    final db = await database.database;
-    await db.update('app_settings', settings.toMap(), where: 'id = 1');
-  }
-
-  @override
   Future<void> loadDemo(DateTime today) async {
     final db = await database.database;
     await db.transaction((txn) async {
       // Replace only marked sample rows; personal records are never overwritten.
       await txn.delete('health_records', where: 'is_demo = 1');
-      for (var day = 0; day < 14; day++) {
+      for (var day = 0; day < 3; day++) {
         await txn.insert(
           'health_records',
           HealthRecord(

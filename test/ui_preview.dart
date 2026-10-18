@@ -35,7 +35,7 @@ void main() {
     });
     final repository = MemoryRepository();
     final today = calendarDay(DateTime.now());
-    for (var day = 0; day < 14; day++) {
+    for (var day = 0; day < 3; day++) {
       await repository.save(
         HealthRecord(
           date: DateTime(today.year, today.month, today.day - day),
@@ -75,15 +75,11 @@ void main() {
     }
 
     await capture('01_today');
-    for (final item in [
-      ('History', '02_history'),
-      ('Insights', '03_insights'),
-      ('Settings', '04_settings'),
-    ]) {
+    for (final item in [('History', '02_history')]) {
       await tester.tap(find.text(item.$1).last);
       await capture(item.$2);
     }
-    await tester.tap(find.text('Today').last);
+    await tester.tap(find.text('Dashboard').last);
     await tester.pumpAndSettle();
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pumpAndSettle();
@@ -103,10 +99,6 @@ void main() {
     await capture('05_log_activity');
     await tester.tap(find.byKey(const Key('save-record')));
     await tester.pumpAndSettle();
-    await vm.updateSettings(vm.settings.copyWith(darkMode: true));
-    await tester.pump(const Duration(seconds: 5));
-    await tester.pumpAndSettle();
-    await capture('06_dark_mode');
     await tester.pumpWidget(const SizedBox());
     debugDisableShadows = true;
     vm.dispose();

@@ -16,7 +16,12 @@ class HealthDatabase {
       return await _factory.openDatabase(
         location,
         options: OpenDatabaseOptions(
-          version: 1,
+          version: 2,
+          onUpgrade: (db, oldVersion, newVersion) async {
+            if (oldVersion < 2) {
+              await db.execute('DROP TABLE IF EXISTS app_settings');
+            }
+          },
           onCreate: (db, version) async {
             await db.execute('''CREATE TABLE health_records (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,20 +35,6 @@ class HealthDatabase {
             await db.execute(
               'CREATE INDEX idx_health_records_date ON health_records(date)',
             );
-            await db.execute('''CREATE TABLE app_settings (
-            id INTEGER PRIMARY KEY CHECK(id = 1),
-            steps_goal INTEGER NOT NULL CHECK(steps_goal BETWEEN 1 AND 200000),
-            calories_goal INTEGER NOT NULL CHECK(calories_goal BETWEEN 1 AND 30000),
-            water_goal INTEGER NOT NULL CHECK(water_goal BETWEEN 1 AND 20000),
-            dark_mode INTEGER NOT NULL CHECK(dark_mode IN (0,1))
-          )''');
-            await db.insert('app_settings', {
-              'id': 1,
-              'steps_goal': 8000,
-              'calories_goal': 400,
-              'water_goal': 2000,
-              'dark_mode': 0,
-            });
           },
         ),
       );

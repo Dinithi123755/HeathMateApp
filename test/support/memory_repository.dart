@@ -1,10 +1,8 @@
 import 'package:healthmate/features/records/data/health_repository.dart';
 import 'package:healthmate/features/records/domain/health_record.dart';
-import 'package:healthmate/features/settings/domain/app_settings.dart';
 
 class MemoryRepository implements HealthRepository {
   List<HealthRecord> rows = [];
-  AppSettings preferences = const AppSettings();
   bool fail = false;
   int nextId = 1;
   @override
@@ -31,13 +29,6 @@ class MemoryRepository implements HealthRepository {
 
   @override
   Future<void> delete(int id) async => rows.removeWhere((r) => r.id == id);
-  @override
-  Future<AppSettings> settings() async => preferences;
-  @override
-  Future<void> saveSettings(AppSettings settings) async {
-    preferences = settings;
-  }
-
   @override
   Future<void> loadDemo(DateTime today) async {}
   @override

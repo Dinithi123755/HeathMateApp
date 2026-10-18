@@ -5,44 +5,6 @@ import '../theme/app_theme.dart';
 
 String number(num value) => NumberFormat.decimalPattern().format(value);
 
-class SectionTitle extends StatelessWidget {
-  const SectionTitle(this.title, {this.subtitle, this.action, super.key});
-  final String title;
-  final String? subtitle;
-  final Widget? action;
-  @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(top: 8, bottom: 16),
-    child: Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
-              ),
-              if (subtitle != null) ...[
-                const SizedBox(height: 5),
-                Text(
-                  subtitle!,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ],
-          ),
-        ),
-        ?action,
-      ],
-    ),
-  );
-}
-
 class EmptyState extends StatelessWidget {
   const EmptyState({
     required this.title,
@@ -60,7 +22,7 @@ class EmptyState extends StatelessWidget {
       child: Column(
         children: [
           Icon(
-            Icons.spa_outlined,
+            Icons.folder_open,
             size: 44,
             color: Theme.of(context).colorScheme.primary,
           ),
@@ -114,7 +76,7 @@ class RecordCard extends StatelessWidget {
               ),
               if (record.isDemo)
                 const Text(
-                  'DEMO',
+                  'SAMPLE',
                   style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
                 ),
               PopupMenuButton<String>(

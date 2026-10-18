@@ -19,100 +19,54 @@ class HistoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final vm = context.watch<HealthViewModel>();
     final rows = vm.filtered;
-    final filtered = vm.filterStart != null;
     return ListView(
-      padding: const EdgeInsets.fromLTRB(22, 8, 22, 110),
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 100),
       children: [
-        const SectionTitle(
-          'Your health journal',
-          subtitle: 'Every small effort has a place here.',
+        Text(
+          'Health records',
+          style: Theme.of(context).textTheme.headlineSmall,
         ),
+        const SizedBox(height: 16),
         Wrap(
-          spacing: 8,
+          spacing: 12,
           runSpacing: 8,
           children: [
-            ChoiceChip(
-              label: const Text('All records'),
-              selected: !filtered,
-              onSelected: (_) => vm.filter(null, null),
-            ),
-            ActionChip(
-              avatar: const Icon(Icons.today, size: 18),
-              label: const Text('Today'),
-              onPressed: () => vm.filter(vm.today, vm.today),
-            ),
-            ActionChip(
-              avatar: const Icon(Icons.search, size: 18),
-              label: const Text('By date'),
+            OutlinedButton.icon(
+              icon: const Icon(Icons.calendar_today),
+              label: Text(
+                vm.selectedDate == null
+                    ? 'Filter by date'
+                    : DateFormat.yMMMd().format(vm.selectedDate!),
+              ),
               onPressed: () async {
                 final date = await showDatePicker(
                   context: context,
-                  initialDate: vm.filterStart ?? vm.today,
+                  initialDate: vm.selectedDate ?? vm.today,
                   firstDate: DateTime(2000),
                   lastDate: vm.today,
                 );
-                if (date != null) vm.filter(date, date);
+                if (date != null) vm.filter(date);
               },
             ),
-            ActionChip(
-              avatar: const Icon(Icons.date_range, size: 18),
-              label: const Text('Date range'),
-              onPressed: () async {
-                final range = await showDateRangePicker(
-                  context: context,
-                  firstDate: DateTime(2000),
-                  lastDate: vm.today,
-                  initialDateRange: filtered
-                      ? DateTimeRange(
-                          start: vm.filterStart!,
-                          end: vm.filterEnd!,
-                        )
-                      : null,
-                );
-                if (range != null) vm.filter(range.start, range.end);
-              },
-            ),
+            if (vm.selectedDate != null)
+              TextButton(
+                onPressed: () => vm.filter(null),
+                child: const Text('Show all'),
+              ),
           ],
         ),
-        if (filtered)
-          Padding(
-            padding: const EdgeInsets.only(top: 12),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    '${DateFormat.yMMMd().format(vm.filterStart!)} – ${DateFormat.yMMMd().format(vm.filterEnd!)}',
-                    style: const TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                ),
-                IconButton(
-                  tooltip: 'Clear date filter',
-                  onPressed: () => vm.filter(null, null),
-                  icon: const Icon(Icons.close),
-                ),
-              ],
-            ),
-          ),
-        const SizedBox(height: 20),
-        Text(
-          '${rows.length} ${rows.length == 1 ? 'record' : 'records'} · Newest first',
-          style: TextStyle(
-            fontSize: 12,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-        ),
-        const SizedBox(height: 14),
+        const SizedBox(height: 16),
+        Text('${rows.length} records'),
+        const SizedBox(height: 12),
         if (rows.isEmpty)
           EmptyState(
-            title: filtered
-                ? 'No entries for these dates'
-                : 'Your journal starts here',
-            message: filtered
-                ? 'Try another date or clear the filter to see all entries.'
-                : 'Log your first activity to build a picture of your progress.',
+            title: 'No records',
+            message: vm.selectedDate == null
+                ? 'Add a health record to get started.'
+                : 'No records for this date.',
             action: TextButton(
-              onPressed: filtered ? () => vm.filter(null, null) : onAdd,
-              child: Text(filtered ? 'Clear filter' : 'Log activity'),
+              onPressed: onAdd,
+              child: const Text('Add record'),
             ),
           )
         else

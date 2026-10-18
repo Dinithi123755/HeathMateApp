@@ -1,14 +1,14 @@
-# Final verification
+# Core-feature revision verification
 
-Date: 18 October 2026 (Asia/Colombo)
+18 October 2026, Asia/Colombo.
 
-- Flutter analyze: no issues.
-- Automated unit/SQLite/widget suite: 12 tests passed.
-- Flutter UI preview rendering: 1 test passed; six screens visually inspected.
-- Android release build: passed from an isolated temporary build folder after a OneDrive file-lock failure.
-- Packaged APK: dist/HealthMate-1.0.0.apk; final SHA256 in dist/SHA256.txt.
-- APK signature: verified; coursework build uses Flutter's development/debug signing key.
-- Android emulator workflow: NOT VERIFIED. ADB continued to report emulator-5554 unauthorized, including after user confirmation and a server reconnect. No successful install or runtime-device test is claimed.
-- iOS: scaffolding included, not built or tested on this Windows host.
+- Scope: Dashboard, health history with exact-date filter, Add/Edit form, SQLite CRUD and validation. Three labelled sample records remain for coursework testing.
+- Removed: goals, progress indicators, streaks, charts, insights, dark mode, settings and water increment shortcuts.
+- Analyzer: no issues after revision.
+- Automated host tests: all 13 passed, including preserving health records during migration to database version 2.
+- UI preview rendering: passed; the three remaining screens were visually inspected. These are host renders with sample data, not device screenshots.
+- Release APK: successfully rebuilt and its signature verified. See dist/HealthMate-1.0.0.apk and dist/SHA256.txt.
+- Installing this revision on emulator-5554 could not run because that device was disconnected. Existing app data was not cleared and no uninstall was attempted. Run from VS Code when an emulator or phone is available.
+- iOS remains unverified on this Windows host.
 
-UI files in docs/previews are actual Flutter widget renders with synthetic data, not device screenshots. The integration_test folder contains the device workflow to run once ADB authorization is working. The public repository, Drive uploads, personally narrated video and final student PDF remain submission tasks.
+The earlier expanded implementation and successful debug startup remain in Git history. Current documentation describes the simplified app. Student PDF, repository publication, Drive uploads and personal video narration are separate submission tasks.
